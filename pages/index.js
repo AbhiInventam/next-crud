@@ -23,9 +23,6 @@ export default function Home() {
   const userData = useSelector(({ user }) => user.userData);
   const userList = useSelector(({ user }) => user.userList);
   const [form, setForm] = useState(initialData);
-  console.log("userList----", userList);
-
-
 
   useEffect(() => {
     setForm(userData);
@@ -55,17 +52,13 @@ export default function Home() {
 
     if (isUpdate) {
       // Edit
-      userList?.filter((item, index) => {
-        if (item?.id === form?.id) {
-          userList.splice((userList?.findIndex((element, index) => element.id === form.id)), 1)
+      const updatedUserList = userList.map((item, index) => {
+        if (item.id === form.id) {
+          return form
         }
+        return item
       })
-      const finalData = {
-        ...form
-      };
-      temp.push(...userList, finalData);
-
-      dispatch(updateUser(temp))
+      dispatch(updateUser(updatedUserList))
 
     } else {
       // Add 
@@ -84,15 +77,10 @@ export default function Home() {
   };
 
   const UpdateUserHandler = (item) => {
-    // const temp = {
-    //   ...item
-    // }
-    // delete temp['id']
     setForm(item)
-    // dispatch(updateUserForm(item)) // Use when calling api here
   };
 
-  // Delete Done
+  // Delete Record
   const DeleteUserHandler = (item) => {
     dispatch(deleteUser(item?.id));
   };
@@ -145,7 +133,6 @@ export default function Home() {
                     name="first_name"
                     className="border w-100"
                     placeholder="first name"
-                    // value={submittedData?.first_name}
                     value={form?.first_name}
                     onChange={HandleChange}
                     required
@@ -248,10 +235,6 @@ export default function Home() {
               </tr>
             </thead>
             <tbody>
-              {/* <td className="py-4 px-6">Abhishek</td>
-                <td className="py-4 px-6">Kadiwala</td>
-                <td className="py-4 px-6">5555555555</td>
-              <td className="py-4 px-6">abhi@test.com</td> */}
               {userList && userList?.map((item, index) => {
                 return (
                   <>
@@ -286,10 +269,6 @@ export default function Home() {
           </table>
         </div>
       </main>
-
-      {/* <footer className={styles.footer}>
-        Created by <span className={styles.logo}>Abhishek</span>
-      </footer> */}
     </div>
   );
 }
